@@ -5,13 +5,6 @@ const KEY = '25354007-4da20173cd76d61434be87abf';
 
 export default class ApiService {
   constructor() {
-    // this.q = '';
-    // this.image_type = 'photo';
-    // this.orientation = 'horizontal';
-    // this.safesearch = 'true';
-    // this.order = 'popular';
-    // this.page = 1;
-    // this.per_page = '40';
     this.totalHits = 0;
 
     this.options = {
@@ -29,38 +22,16 @@ export default class ApiService {
 
   async fetchData() {
     const response = await axios.get(BASE_URL, this.options);
-    const { hits, total, totalHits } = response.data;
-    // console.log(response);
+    const { hits, total, totalHits } = await response.data;
 
     this.totalHits = total;
-    // console.log(response.status);
-    // console.log(total);
-    // console.log(hits);
+
     if (response.status == 200) {
       this.incrementPage();
     }
-    // console.log(`current page from constructor: ${this.options.params.page}`);
+
     return response.data;
   }
-
-  /*
-  async fetchData() {
-    const url = `${BASE_URL}/?key=${KEY}&q=${this.q}&image_type=${this.image_type}&orientation=${this.orientation}&safesearch=${this.safesearch}&order=${this.order}&page=${this.page}&per_page=${this.per_page}`;
-
-    return fetch(url)
-      .then(response => {
-        if (!response.ok) {
-          throw new Error(response.status);
-        }
-        return response.json();
-      })
-      .then(data => {
-        this.incrementPage();
-        // this.totalHits = data.totalHits;
-        // console.log(this.totalHits);
-        return data;
-      });
-  }*/
 
   incrementPage() {
     this.options.params.page += 1;
@@ -70,7 +41,11 @@ export default class ApiService {
     this.options.params.page = 1;
   }
 
-  get Hits() {
+  get page() {
+    return this.options.params.page;
+  }
+
+  get hits() {
     return this.totalHits;
   }
 
@@ -79,7 +54,6 @@ export default class ApiService {
   }
 
   set query(newQuery) {
-    // this.q = newQuery;
     this.options.params.q = newQuery;
   }
 }
